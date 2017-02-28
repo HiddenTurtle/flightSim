@@ -17,6 +17,10 @@ function setup() {
 
 function draw() {
   background(0, 50, 150);
+  noStroke();
+  fill(255);
+  textSize(25);
+  text("RESTART", 10, 25);
   strokeWeight(10);
   stroke(125, 25, 25);
   fill(150, 50, 50);
@@ -103,5 +107,16 @@ function keyReleased() {
   }
   if(keyCode == RIGHT_ARROW) {
     jetOn[2] = false;
+  }
+}
+
+function mousePressed() {
+  if(mouseX < 100 && mouseY < 50) {
+    rocketPos = createVector(320, 175);
+    rocketRot = 0;
+    rocketVel = createVector(0, 0);
+    jetOn = [false, false, false]
+    planetPos = createVector(320, 240);
+    offGround = false;
   }
 }
