@@ -65,7 +65,7 @@ function draw() {
       rocketPos.set(10000, 10000);
     }
     rocketVel.set(0, 0);
-    if(rocketPos.y < 240) {
+    if(rocketPos.y < width / 2) {
       rocketPos.add(0, rocketPos.dist(planetPos) - 65);
     } else {
       rocketPos.add(0, 65 - rocketPos.dist(planetPos));
