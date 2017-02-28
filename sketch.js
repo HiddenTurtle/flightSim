@@ -6,13 +6,13 @@ var planetPos;
 var offGround;
 
 function setup() {
-  rocketPos = createVector(320, 175);
+  createCanvas(windowWidth, windowHeight);
+  rocketPos = createVector(width / 2, height / 2 - 65);
   rocketRot = 0;
   rocketVel = createVector(0, 0);
   jetOn = [false, false, false]
-  planetPos = createVector(320, 240);
+  planetPos = createVector(width / 2, height / 2);
   offGround = false;
-  createCanvas(640, 480);
 }
 
 function draw() {
