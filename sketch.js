@@ -7,7 +7,7 @@ var offGround;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  rocketPos = createVector(width / 2, height / 2 - 65);
+  rocketPos = createVector(width / 2, height / 2 - 70);
   rocketRot = 0;
   rocketVel = createVector(0, 0);
   jetOn = [false, false, false]
