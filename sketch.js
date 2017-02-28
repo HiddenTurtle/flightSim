@@ -45,19 +45,19 @@ function draw() {
   triangle(-10, 10, 10, 10, 0, -20);
   pop();
   if(jetOn[1]) {
-    var jetForce = createVector(0, -0.2).rotate(rocketRot);
+    var jetForce = createVector(0, -0.066).rotate(rocketRot);
     rocketVel.add(jetForce);
   }
   if(jetOn[0]) {
-    var jetForce = createVector(0, -0.1).rotate(rocketRot + 0.4);
+    var jetForce = createVector(0, -0.033).rotate(rocketRot + 0.4);
     rocketVel.add(jetForce);
   }
   if(jetOn[2]) {
-    var jetForce = createVector(0, -0.1).rotate(rocketRot - 0.4);
+    var jetForce = createVector(0, -0.033).rotate(rocketRot - 0.4);
     rocketVel.add(jetForce);
   }
   var gravityForce = p5.Vector.sub(planetPos, rocketPos);
-  gravityForce.setMag(600 / pow(gravityForce.mag(), 2));
+  gravityForce.setMag(200 / pow(gravityForce.mag(), 2));
   rocketVel.add(gravityForce)
   rocketPos.add(rocketVel);
   if(rocketPos.dist(planetPos) < 65) {
