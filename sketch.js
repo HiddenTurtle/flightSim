@@ -5,6 +5,7 @@ var jetOn;
 var planetPos;
 var offGround;
 var stars;
+var predictorOn;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -17,6 +18,7 @@ function setup() {
   for(var i = 0; i < 2000; i++) {
     stars.push(createVector(random(-2 * width, 2 * width), random(-2 * height, 2 * height)));
   }
+  predictorOn = false;
   offGround = false;
 }
 
@@ -26,6 +28,12 @@ function draw() {
   fill(255);
   textSize(25);
   text("RESTART", 5, 25);
+  if(predictorOn) {
+    text("DISABLE FLIGHT GUIDE", 5, 50);
+  } else {
+    text("ENABLE FLIGHT GUIDE", 5, 50);
+  }
+  text("")
   push();
   translate(width / 2 - rocketPos.x, height / 2 - rocketPos.y);
   strokeWeight(10);
@@ -37,6 +45,21 @@ function draw() {
   for(var i = 0; i < stars.length; i++) {
     if(dist(stars[i].x, stars[i].y, 0, 0) > 215) {
       point(stars[i].x, stars[i].y);
+    }
+  }
+  if(predictorOn) {
+    stroke(0, 255, 0);
+    var predictorPos = rocketPos.copy();
+    var predictorVel = rocketVel.copy();
+    for(var i = 0; i < 10000; i++) {
+      point(predictorPos.x, predictorPos.y);
+      var gravityForce = p5.Vector.sub(planetPos, predictorPos);
+      gravityForce.setMag(2000 / pow(gravityForce.mag(), 2));
+      predictorVel.add(gravityForce);
+      predictorPos.add(predictorVel);
+      if(predictorPos.dist(planetPos) < 205 || (i > 10 && predictorPos.dist(rocketPos) < 1) || predictorPos) {
+        break;
+      }
     }
   }
   pop();
@@ -77,7 +100,7 @@ function draw() {
   }
   var gravityForce = p5.Vector.sub(planetPos, rocketPos);
   gravityForce.setMag(2000 / pow(gravityForce.mag(), 2));
-  rocketVel.add(gravityForce)
+  rocketVel.add(gravityForce);
   rocketPos.add(rocketVel);
   if(rocketPos.dist(planetPos) < 215) {
     if(offGround) {
@@ -122,12 +145,14 @@ function keyReleased() {
 }
 
 function mousePressed() {
-  if(mouseX < 100 && mouseY < 50) {
+  if(mouseX < 100 && mouseY < 25) {
     rocketPos = createVector(0, -65);
     rocketRot = 0;
     rocketVel = createVector(0, 0);
     jetOn = [false, false, false]
     planetPos = createVector(0, 0);
     offGround = false;
+  } else if(mouseX < 300 && mouseY < 50) {
+    predictorOn = !predictorOn;
   }
 }
