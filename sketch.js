@@ -3,7 +3,6 @@ var rocketRot;
 var rocketVel;
 var jetOn;
 var planetPos;
-var offGround;
 var stars;
 var predictorOn;
 
@@ -19,7 +18,6 @@ function setup() {
     stars.push(createVector(random(-2 * width, 2 * width), random(-2 * height, 2 * height)));
   }
   predictorOn = false;
-  offGround = false;
 }
 
 function draw() {
@@ -103,17 +101,12 @@ function draw() {
   rocketVel.add(gravityForce);
   rocketPos.add(rocketVel);
   if(rocketPos.dist(planetPos) < 215) {
-    if(offGround) {
-      rocketPos.set(10000, 10000);
-    }
     rocketVel.set(0, 0);
     if(rocketPos.y < 0) {
       rocketPos.add(0, rocketPos.dist(planetPos) - 215);
     } else {
       rocketPos.add(0, 215 - rocketPos.dist(planetPos));
     }
-  } else {
-    //offGround = true;
   }
   if(rocketVel.mag() > 0.001) {
     rocketRot = rocketVel.heading() + HALF_PI;
@@ -129,6 +122,13 @@ function keyPressed() {
   }
   if(keyCode == RIGHT_ARROW) {
     jetOn[2] = true;
+  }
+  if(key == "r" || key == "R") {
+    rocketPos = createVector(0, -65);
+    rocketRot = 0;
+    rocketVel = createVector(0, 0);
+    jetOn = [false, false, false]
+    planetPos = createVector(0, 0);
   }
 }
 
@@ -151,7 +151,6 @@ function mousePressed() {
     rocketVel = createVector(0, 0);
     jetOn = [false, false, false]
     planetPos = createVector(0, 0);
-    offGround = false;
   } else if(mouseX < 300 && mouseY < 50) {
     predictorOn = !predictorOn;
   }
