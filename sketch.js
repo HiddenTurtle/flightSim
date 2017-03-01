@@ -57,7 +57,7 @@ function draw() {
       gravityForce.setMag(2000 / pow(gravityForce.mag(), 2));
       predictorVel.add(gravityForce);
       predictorPos.add(predictorVel);
-      if(predictorPos.dist(planetPos) < 205 || (i > 10 && predictorPos.dist(rocketPos) < 1) || predictorPos) {
+      if(predictorPos.dist(planetPos) < 205 || (i > 10 && predictorPos.dist(rocketPos) < 1)) {
         break;
       }
     }
