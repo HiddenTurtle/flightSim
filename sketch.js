@@ -4,14 +4,19 @@ var rocketVel;
 var jetOn;
 var planetPos;
 var offGround;
+var stars;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  rocketPos = createVector(width / 2, height / 2 - 65);
+  rocketPos = createVector(0, -215);
   rocketRot = 0;
   rocketVel = createVector(0, 0);
   jetOn = [false, false, false]
-  planetPos = createVector(width / 2, height / 2);
+  planetPos = createVector(0, 0);
+  stars = [];
+  for(var i = 0; i < 2000; i++) {
+    stars.push(createVector(random(-2 * width, 2 * width), random(-2 * height, 2 * height)));
+  }
   offGround = false;
 }
 
@@ -20,13 +25,23 @@ function draw() {
   noStroke();
   fill(255);
   textSize(25);
-  text("RESTART", 10, 25);
+  text("RESTART", 5, 25);
+  push();
+  translate(width / 2 - rocketPos.x, height / 2 - rocketPos.y);
   strokeWeight(10);
   stroke(125, 25, 25);
   fill(150, 50, 50);
-  ellipse(planetPos.x, planetPos.y, 100, 100);
+  ellipse(planetPos.x, planetPos.y, 400, 400);
+  strokeWeight(3);
+  stroke(255);
+  for(var i = 0; i < stars.length; i++) {
+    if(dist(stars[i].x, stars[i].y, 0, 0) > 215) {
+      point(stars[i].x, stars[i].y);
+    }
+  }
+  pop();
   push();
-  translate(rocketPos.x, rocketPos.y);
+  translate(width / 2, height / 2);
   rotate(rocketRot);
   if(jetOn[1]) {
     strokeWeight(5);
@@ -61,25 +76,21 @@ function draw() {
     rocketVel.add(jetForce);
   }
   var gravityForce = p5.Vector.sub(planetPos, rocketPos);
-  gravityForce.setMag(200 / pow(gravityForce.mag(), 2));
+  gravityForce.setMag(2000 / pow(gravityForce.mag(), 2));
   rocketVel.add(gravityForce)
   rocketPos.add(rocketVel);
-  if(rocketPos.dist(planetPos) < 65) {
+  if(rocketPos.dist(planetPos) < 215) {
     if(offGround) {
       rocketPos.set(10000, 10000);
     }
     rocketVel.set(0, 0);
-    if(rocketPos.y < width / 2) {
-      rocketPos.add(0, rocketPos.dist(planetPos) - 65);
+    if(rocketPos.y < 0) {
+      rocketPos.add(0, rocketPos.dist(planetPos) - 215);
     } else {
-      rocketPos.add(0, 65 - rocketPos.dist(planetPos));
+      rocketPos.add(0, 215 - rocketPos.dist(planetPos));
     }
   } else {
-    offGround = true;
-  }
-  if(rocketPos.dist(planetPos) < 100) {
-    console.log(rocketVel.heading() + HALF_PI);
-    console.log(rocketVel);
+    //offGround = true;
   }
   if(rocketVel.mag() > 0.001) {
     rocketRot = rocketVel.heading() + HALF_PI;
@@ -112,11 +123,11 @@ function keyReleased() {
 
 function mousePressed() {
   if(mouseX < 100 && mouseY < 50) {
-    rocketPos = createVector(width / 2, height / 2 - 65);
+    rocketPos = createVector(0, -65);
     rocketRot = 0;
     rocketVel = createVector(0, 0);
     jetOn = [false, false, false]
-    planetPos = createVector(width / 2, height / 2);
+    planetPos = createVector(0, 0);
     offGround = false;
   }
 }
