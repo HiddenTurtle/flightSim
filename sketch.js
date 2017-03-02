@@ -73,7 +73,7 @@ function draw() {
     if(apogee.dist(rocketPos) > 0.1) {
       point(apogee.x, apogee.y);
     }
-    if(perigee.dist(rocketPos) > 0.1) {
+    if(perigee.dist(rocketPos) > 20) {
       point(perigee.x, perigee.y);
     }
   }
