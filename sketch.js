@@ -1,6 +1,7 @@
 var rocketPos;
 var rocketRot;
 var rocketVel;
+var rocketRotVel;
 var jetOn;
 var planetPos;
 var stars;
@@ -9,13 +10,14 @@ var zoom;
 var draggingZoom;
 var speed;
 var draggingSpeed;
-var starsOn;
+var crashed;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   rocketPos = createVector(0, -215);
   rocketRot = 0;
   rocketVel = createVector(0, 0);
+  rocketRotVel = 0;
   jetOn = [false, false, false]
   planetPos = createVector(0, 0);
   stars = [];
@@ -27,6 +29,7 @@ function setup() {
   draggingZoom = false;
   speed = 1;
   draggingSpeed = false;
+  crashed = false;
 }
 
 function draw() {
@@ -47,7 +50,7 @@ function draw() {
       point(stars[i].x, stars[i].y);
     }
   }
-  if(predictorOn) {
+  if(predictorOn && !crashed) {
     stroke(0, 255, 0);
     var predictorPos = rocketPos.copy();
     var predictorVel = rocketVel.copy();
@@ -81,21 +84,23 @@ function draw() {
   push();
   translate(width / 2, height / 2);
   rotate(rocketRot);
-  if(jetOn[1]) {
-    strokeWeight(5);
-    stroke(255, 150, 50)
-    line(-5, 10, -8, 20);
-    line(5, 10, 8, 20);
-  }
-  if(jetOn[0]) {
-    strokeWeight(5);
-    stroke(255, 150, 50)
-    line(-5, 10, -7, 15);
-  }
-  if(jetOn[2]) {
-    strokeWeight(5);
-    stroke(255, 150, 50)
-    line(5, 10, 7, 15);
+  if(!crashed) {
+    if(jetOn[1]) {
+      strokeWeight(5);
+      stroke(255, 150, 50)
+      line(-5, 10, -8, 20);
+      line(5, 10, 8, 20);
+    }
+    if(jetOn[0]) {
+      strokeWeight(5);
+      stroke(255, 150, 50)
+      line(-5, 10, -7, 15);
+    }
+    if(jetOn[2]) {
+      strokeWeight(5);
+      stroke(255, 150, 50)
+      line(5, 10, 7, 15);
+    }
   }
   noStroke();
   fill(255, 230, 200);
@@ -133,25 +138,33 @@ function draw() {
     if(jetOn[0] && !jetOn[1]) {
       var jetForce = createVector(0, -0.033).rotate(rocketRot + 0.4);
       rocketVel.add(jetForce);
+      rocketRotVel += 0.001;
     }
     if(jetOn[2] && !jetOn[1]) {
       var jetForce = createVector(0, -0.033).rotate(rocketRot - 0.4);
       rocketVel.add(jetForce);
+      rocketRotVel -= 0.001;
     }
-    var gravityForce = p5.Vector.sub(planetPos, rocketPos);
-    gravityForce.setMag(2800 / pow(gravityForce.mag(), 2));
-    rocketVel.add(gravityForce);
-    rocketPos.add(rocketVel);
+    if(!crashed) {
+      var gravityForce = p5.Vector.sub(planetPos, rocketPos);
+      gravityForce.setMag(2800 / pow(gravityForce.mag(), 2));
+      rocketVel.add(gravityForce);
+      rocketPos.add(rocketVel);
+      rocketRot += rocketRotVel;
+    }
     if(rocketPos.dist(planetPos) < 215) {
+      if(rocketVel.mag() > 0.1) {
+        if(abs(rocketRot - p5.Vector.sub(rocketPos, planetPos).heading() - HALF_PI) > 0.1) {
+          crashed = true;
+        }
+      }
       rocketVel.set(0, 0);
+      rocketRotVel = 0;
       if(rocketPos.y < 0) {
         rocketPos.add(0, rocketPos.dist(planetPos) - 215);
       } else {
         rocketPos.add(0, 215 - rocketPos.dist(planetPos));
       }
-    }
-    if(rocketVel.mag() > 0.001) {
-      rocketRot = rocketVel.heading() + HALF_PI;
     }
   }
 } 
@@ -174,6 +187,7 @@ function keyPressed() {
     planetPos = createVector(0, 0);
     zoom = 1;
     speed = 1;
+    crashed = false;
   }
   if(key == "q" || key == "Q" && zoom < 2) {
     zoom += 0.1;
@@ -210,6 +224,7 @@ function mousePressed() {
     planetPos = createVector(0, 0);
     zoom = 1;
     speed = 1;
+    crashed = false;
   }
   if(mouseX < 300 && mouseY < 50 && mouseY > 25) {
     predictorOn = !predictorOn;
