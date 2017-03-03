@@ -154,8 +154,12 @@ function draw() {
     }
     if(rocketPos.dist(planetPos) < 215) {
       if(rocketVel.mag() > 0.1) {
-        if(abs(rocketRot - p5.Vector.sub(rocketPos, planetPos).heading() - HALF_PI) > 0.1) {
+        if(abs((rocketRot - HALF_PI) % TWO_PI - p5.Vector.sub(rocketPos, planetPos).heading()) > 0.4 && abs((TWO_PI - ((rocketRot - HALF_PI) % TWO_PI)) % TWO_PI - p5.Vector.sub(rocketPos, planetPos).heading()) > 0.4) {
           crashed = true;
+          console.log((rocketRot - HALF_PI) % TWO_PI);
+          console.log(p5.Vector.sub(rocketPos, planetPos).heading())
+        } else {
+          rocketRot = p5.Vector.sub(rocketPos, planetPos).heading() + HALF_PI;
         }
       }
       rocketVel.set(0, 0);
