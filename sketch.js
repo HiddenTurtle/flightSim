@@ -18,11 +18,11 @@ function setup() {
   rocketRot = 0;
   rocketVel = createVector(0, 0);
   rocketRotVel = 0;
-  jetOn = [false, false, false]
+  jetOn = [false, false, false];
   planetPos = createVector(0, 0);
   stars = [];
   for(var i = 0; i < 1000; i++) {
-    stars.push(createVector(random(-3 * width, 3 * width), random(-3 * height, 3 * height)));
+    stars.push(createVector(random(-3 * width, 4 * width), random(-3 * height, 4 * height)));
   }
   predictorOn = false;
   zoom = 1;
