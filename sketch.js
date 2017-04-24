@@ -25,7 +25,7 @@ function setup() {
     stars.push(createVector(random(-3 * width, 4 * width), random(-3 * height, 4 * height)));
   }
   predictorOn = false;
-  zoom = 1;
+  zoom = 2;
   draggingZoom = false;
   speed = 1;
   draggingSpeed = false;
